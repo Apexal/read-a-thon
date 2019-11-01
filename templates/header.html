@@ -21,17 +21,21 @@
 
     <div id="navbarBasicExample" class="navbar-menu">
       <div class="navbar-start">
+        {% if is_admin %}
         <a class="navbar-item">
           Home
         </a>
         
-        {% if is_admin %}
         <a class="navbar-item">
           Class Overview
         </a>
 
         <a class="navbar-item">
           School Overview
+        </a>
+        {% else %}
+        <a class="navbar-item" href="/">
+          My Reading
         </a>
         {% endif %}
       </div>

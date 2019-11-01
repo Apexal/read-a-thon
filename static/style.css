@@ -1,5 +1,15 @@
 /* --------- GENERAL --------  */
+body {
+  font-size: 1.5em;
+}
 
+.title {
+  font-size: 1.8em;
+}
+
+.subtitle {
+  font-size: 1.2em;
+}
 /* --------------------------  */
 
 /* --------- HEADER ---------  */
