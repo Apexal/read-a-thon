@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block head %}
+    {{ super() }}
+    <link rel='stylesheet' type='text/css' media='screen' href='{{ url_for("static", filename="student_homepage.css") }}'>
+{% endblock %}
+{% block content %}
+<section class="section">
+  <h1 class="title">Welcome back, {{ student['first_name'] }}</h1>
+  <p class="subtitle student-summary">You've read for 6 hours and 30 minutes so far since the start of the Read-a-Thon! You have been reading an average of 30 minutesevery day. Great job!</p>
+  
+  <div class="columns">
+    <div class="column is-7">
+      <canvas id="student-chart"></canvas>
+    </div>
+    <div class="column is-5">
+      <div class="box student-today">
+        <form action="">
+          <h3 class="title">Thursday, October 31st</h3>
+          <p>I read for </p>
+          <input class="input" type="number" name="minutes-today" id="minutes-today" value="30" step="10" max="200" min="0" required>
+          <p>minutes today!</p>
+          
+          <button class="button" type="submit">Save</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+<script>
+const ctx = document.getElementById('student-chart').getContext('2d')
+
+const chart = new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: ['Mon 10/28', 'Tues 10/29', 'Wed 10/30', 'Thur 10/31'],
+    datasets: [{
+      label: 'Your Reading Minutes',
+      data: [30, 45, 10, 20, 25]
+    }]
+  }
+})
+</script>
+{% endblock %}
