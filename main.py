@@ -41,7 +41,13 @@ def homepage():
 
 @app.route('/today', methods=['POST'])
 def today():
-    return f'You claimed to work for {request.form["minutes-today"]} minutes today'
+    # Create or update record for student today
+    record = {
+        'student_id': 1, # TODO: real id
+        'date': datetime.datetime.today(),
+        'minutes': int(request.form['minutes-today'])
+    }
+    return record
 
 # ---------- AUTHENTICATION ----------
 # @app.route('/login', methods=['GET', 'POST'])
