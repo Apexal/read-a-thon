@@ -1,5 +1,5 @@
 import os
-
+import datetime
 from flask import Flask, escape, request, url_for, redirect, render_template, escape, session
 
 from csv import DictReader
@@ -8,10 +8,34 @@ app = Flask(__name__)
 
 app.secret_key = os.environ['SECRET_KEY']
 
+readathon = {
+    'school_id': 1,
+    'start': datetime.datetime(2019, 10, 30),
+    'end': datetime.datetime(2019, 11, 7)
+}
+
+school = {
+    'id': 1,
+    'name': 'Test School'
+}
+
+student = {
+    'id': 1,
+    'first_name': 'Frank',
+    'last_name': 'Matranga'
+}
+
+
 @app.route('/')
 def homepage():
-    if True: # if logged in
-        return render_template('pages/student_homepage.html', student={ 'first_name': 'Frank', 'last_name': 'Matranga' }, school={ 'name': 'Test School' })
+    if True:  # if logged in
+        current_stats = {
+            'hours': 5,
+            'minutes': 25
+        }
+        average_daily_minutes = 20
+
+        return render_template('pages/student_homepage.html', student=student, school=school, current_stats=current_stats, average_daily_minutes=average_daily_minutes)
     else:
         return render_template('pages/homepage.html')
 

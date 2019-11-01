@@ -6,7 +6,7 @@
 {% block content %}
 <section class="section">
   <h1 class="title">Welcome back, {{ student['first_name'] }}!</h1>
-  <p class="subtitle student-summary">You've read for 6 hours and 30 minutes so far since the start of the Read-a-Thon! You have been reading an average of 30 minutes every day. Great job!</p>
+  <p class="subtitle student-summary">You've read for <b>{{ current_stats['hours'] }} hours and {{ current_stats['minutes'] }} minutes</b> so far since the start of the Read-a-Thon! You have been reading an average of <b>{{ average_daily_minutes }} minutes</b> every day. Great job!</p>
   
   <div class="columns">
     <div class="column is-7">
