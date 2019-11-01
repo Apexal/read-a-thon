@@ -39,6 +39,10 @@ def homepage():
     else:
         return render_template('pages/homepage.html')
 
+@app.route('/today', methods=['POST'])
+def today():
+    return f'You claimed to work for {request.form["minutes-today"]} minutes today'
+
 # ---------- AUTHENTICATION ----------
 # @app.route('/login', methods=['GET', 'POST'])
 # def login():
