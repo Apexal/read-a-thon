@@ -1,13 +1,15 @@
 {% extends "base.html" %}
 {% block head %}
-    {{ super() }}
-    <link rel='stylesheet' type='text/css' media='screen' href='{{ url_for("static", filename="student_homepage.css") }}'>
+{{ super() }}
+<link rel='stylesheet' type='text/css' media='screen' href='{{ url_for("static", filename="student_homepage.css") }}'>
 {% endblock %}
 {% block content %}
 <section class="section">
   <h1 class="title">Welcome back, {{ student['first_name'] }}!</h1>
-  <p class="subtitle student-summary">You've read for <b>{{ current_stats['hours'] }} hours and {{ current_stats['minutes'] }} minutes</b> so far since the start of the Read-a-Thon! You have been reading an average of <b>{{ average_daily_minutes }} minutes</b> every day. Great job!</p>
-  
+  <p class="subtitle student-summary">You've read for <b>{{ current_stats['hours'] }} hours and
+      {{ current_stats['minutes'] }} minutes</b> so far since the start of the Read-a-Thon! You have been reading an
+    average of <b>{{ average_daily_minutes }} minutes</b> every day. Great job!</p>
+
   <div class="columns">
     <div class="column is-7">
       <canvas id="student-chart"></canvas>
@@ -15,11 +17,12 @@
     <div class="column is-5">
       <div class="box student-today">
         <form action="/today" method="POST">
-          <h3 class="title">Thursday, October 31st</h3>
+          <h3 class="title">{{ today_str }}</h3>
           <p>I read for </p>
-          <input class="input" type="number" name="minutes-today" id="minutes-today" value="{{ today_reading_record.minutes }}" step="10" max="200" min="0" required>
+          <input class="input" type="number" name="minutes-today" id="minutes-today"
+            value="{{ today_reading_record.minutes }}" step="10" max="200" min="0" required>
           <p>minutes today!</p>
-          
+
           <button class="button" type="submit">Save</button>
         </form>
       </div>
@@ -28,18 +31,25 @@
 </section>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
 <script>
-const ctx = document.getElementById('student-chart').getContext('2d')
+  async function onReady() {
 
-const chart = new Chart(ctx, {
-  type: 'bar',
-  data: {
-    labels: ['Mon 10/28', 'Tues 10/29', 'Wed 10/30', 'Thur 10/31'],
-    datasets: [{
-      label: 'Your Reading Minutes',
-      data: [30, 45, 10, 20, 25]
-    }]
+    const ctx = document.getElementById('student-chart').getContext('2d')
+
+    const data = await fetch('/daily-minutes')
+    const minutes = (await data.json()).reading_minutes
+    const chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: minutes.map(m => moment(m.date).format('MMM Do')),
+        datasets: [{
+          label: 'Your Reading Minutes',
+          data: minutes.map(m => m.minutes)
+        }]
+      }
+    })
   }
-})
+  onReady();
 </script>
 {% endblock %}

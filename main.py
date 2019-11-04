@@ -52,6 +52,13 @@ class ReadingRecord(db.Model):
     date = db.Column(db.Date, nullable=False)
     minutes = db.Column(db.Integer, nullable=False)
 
+    def as_dict(self):
+        return {
+            'id': self.id,
+            'date': self.date,
+            'minutes': self.minutes
+        }
+
     def __repr__(self):
         return f'<ReadingRecord id={self.id} date={self.date}>'
 
@@ -75,14 +82,22 @@ def homepage():
             'minutes': 25
         }
         average_daily_minutes = 20
+        today_str = datetime.date.today().strftime('%A, %B %-d')
         today_reading_record = ReadingRecord.query.filter_by(
             student_id=session['student_id'], date=datetime.date.today()).first()
 
-        return render_template('pages/student_homepage.html', student=student, school=school, current_stats=current_stats, average_daily_minutes=average_daily_minutes, today_reading_record=today_reading_record)
+        return render_template('pages/student_homepage.html', student=student, school=school, current_stats=current_stats, average_daily_minutes=average_daily_minutes, today_reading_record=today_reading_record, today_str=today_str)
     else:
         print('not logged in')
         return render_template('pages/homepage.html')
 
+@app.route('/daily-minutes', methods=['GET'])
+def daily_minutes():
+    reading_minutes = ReadingRecord.query.filter(ReadingRecord.date > readathon['start'], ReadingRecord.student_id == session['student_id'])
+    all_minutes = []
+    for record in reading_minutes:
+        all_minutes.append(record.as_dict())
+    return { 'reading_minutes': all_minutes }
 
 @app.route('/today', methods=['POST'])
 def today():
