@@ -8,7 +8,7 @@
   <h1 class="title">Welcome back, {{ student['first_name'] }}!</h1>
   <p class="subtitle student-summary">You've read for <b>{{ current_stats['hours'] }} hours and
       {{ current_stats['minutes'] }} minutes</b> so far since the start of the Read-a-Thon! You have been reading an
-    average of <b>{{ average_daily_minutes }} minutes</b> every day. Great job!</p>
+    average of <b><span id="average-daily-minutes">???</span> minutes</b> every day. Great job!</p>
 
   <div class="columns">
     <div class="column is-7">
@@ -39,13 +39,22 @@
 
     const data = await fetch('/daily-minutes')
     const minutes = (await data.json()).reading_minutes
+    const start = moment(minutes[0].date)
+    const end = moment(minutes[minutes.length - 1].date)
+    const days = end.diff(start, 'days');
+    console.log(days);
+    const filled = []
+    for(let i = 0; i < days; i++) {
+      let d = moment(start).add(i, 'days')
+      filled.push(minutes.find(m => moment(m.date).isSame(d, 'day')) || { date: d, minutes: 0 })
+    }
     const chart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: minutes.map(m => moment(m.date).format('MMM Do')),
+        labels: filled.map(m => moment(m.date).format('MMM Do')),
         datasets: [{
           label: 'Your Reading Minutes',
-          data: minutes.map(m => m.minutes)
+          data: filled.map(m => m.minutes)
         }]
       }
     })
